@@ -1,5 +1,6 @@
 package br.com.zupacademy.gabriel.ecommerce.usuario;
 
+import br.com.zupacademy.gabriel.ecommerce.validacao.UniqueValue;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
