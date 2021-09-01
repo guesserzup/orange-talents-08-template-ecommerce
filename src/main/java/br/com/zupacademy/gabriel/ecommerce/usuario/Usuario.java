@@ -29,9 +29,9 @@ public class Usuario {
     @NotNull
     private LocalDateTime momentoDaCriacao = LocalDateTime.now();
 
-    public Usuario(String login, String senha) {
+    public Usuario(String login, SenhaLimpa senha) {
         this.login = login;
-        this.senha = senha;
+        this.senha = senha.hash();
     }
 
     public Long getId() {

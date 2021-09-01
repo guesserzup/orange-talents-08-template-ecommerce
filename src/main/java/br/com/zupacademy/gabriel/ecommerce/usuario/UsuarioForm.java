@@ -20,6 +20,6 @@ public class UsuarioForm {
     }
 
     public Usuario toEntity() {
-        return new Usuario(this.login,this.senha);
+        return new Usuario(login, new SenhaLimpa(senha));
     }
 }
