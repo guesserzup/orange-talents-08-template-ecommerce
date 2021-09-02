@@ -18,7 +18,7 @@ public class CategoriaForm {
         Categoria categoria = new Categoria(this.nome);
 
         if (idCategoriaMae != null) {
-            categoria.setCategoriaMae(categoriaRepository.findById(idCategoriaMae).orElse(categoria));
+            categoria.setCategoriaMae(categoriaRepository.findById(idCategoriaMae).orElse(null));
         }
 
         return categoria;
