@@ -2,6 +2,7 @@ package br.com.zupacademy.gabriel.ecommerce.produto;
 
 import br.com.zupacademy.gabriel.ecommerce.categoria.Categoria;
 import br.com.zupacademy.gabriel.ecommerce.produto.caracteristica.CaracteristicasProduto;
+import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -37,6 +38,10 @@ public class Produto {
 
     @ManyToOne
     @NotNull
+    private Usuario usuario;
+
+    @ManyToOne
+    @NotNull
     private Categoria categoria;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -47,12 +52,14 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, BigDecimal valor, Integer quantidade, String descricao, Categoria categoria) {
+    public Produto(String nome, BigDecimal valor, Integer quantidade, String descricao, Categoria categoria,
+                   Usuario usuario) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.usuario = usuario;
     }
 
     public void adicionaCaracteristica(CaracteristicasProduto caracteristica) {
@@ -86,6 +93,8 @@ public class Produto {
     public Categoria getCategoria() {
         return categoria;
     }
+
+    public boolean pertenceAoUsuario(Long id) { return this.id == id; }
 
     public List<CaracteristicasProduto> getCaracteristicas() {
         return caracteristicas;

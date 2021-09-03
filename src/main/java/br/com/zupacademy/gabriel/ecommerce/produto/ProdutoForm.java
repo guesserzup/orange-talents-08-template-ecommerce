@@ -3,6 +3,7 @@ package br.com.zupacademy.gabriel.ecommerce.produto;
 import br.com.zupacademy.gabriel.ecommerce.categoria.Categoria;
 import br.com.zupacademy.gabriel.ecommerce.categoria.CategoriaRepository;
 import br.com.zupacademy.gabriel.ecommerce.produto.caracteristica.CaracteristicasProdutoForm;
+import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 import br.com.zupacademy.gabriel.ecommerce.validacao.ExistEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -29,7 +30,7 @@ public class ProdutoForm {
 
 
     @NotNull
-    @ExistEntity(fieldName = "id", domainClass = Categoria.class)
+    @ExistEntity(domainClass = Categoria.class, fieldName = "id")
     private Long idCategoria;
 
     @Size(min = 3)
@@ -45,9 +46,9 @@ public class ProdutoForm {
         this.caracteristicas = caracteristicas;
     }
 
-    public Produto paraProduto(CategoriaRepository categoriaRepositorio) {
+    public Produto toEntity(CategoriaRepository categoriaRepositorio, Usuario usuarioLogado) {
         Categoria categoria = categoriaRepositorio.findById(idCategoria).get();
-        Produto produto = new Produto(nome, valor, qtdeDisponivel, descricao, categoria);
+        Produto produto = new Produto(nome, valor, qtdeDisponivel, descricao, categoria, usuarioLogado);
 
         caracteristicas.forEach(caracteristica -> produto.adicionaCaracteristica(caracteristica.toEntity()));
 
