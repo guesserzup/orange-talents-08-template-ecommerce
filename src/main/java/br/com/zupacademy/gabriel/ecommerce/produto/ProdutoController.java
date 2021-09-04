@@ -5,6 +5,10 @@ import br.com.zupacademy.gabriel.ecommerce.produto.imagem.ImagemForm;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.Imagem;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.ImagemRepository;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.UploaderMockInterface;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.Opiniao;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoDto;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoForm;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoRepository;
 import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,9 +35,11 @@ public class ProdutoController {
     ImagemRepository imagemRepository;
 
     @Autowired
+    OpiniaoRepository opiniaoRepository;
+
+    @Autowired
     UploaderMockInterface uploaderMockInterface;
 
-    @Transactional
     @PostMapping
     public ProdutoDto cadastrar(@RequestBody @Valid ProdutoForm form, @AuthenticationPrincipal Usuario usuarioLogado) {
         Produto produto = form.toEntity(categoriaRepositorio, usuarioLogado);
@@ -45,7 +51,7 @@ public class ProdutoController {
     @Transactional
     @PostMapping("/{idProduto}/imagens")
     public String adicionarImagem(@PathVariable("idProduto") Long id, @AuthenticationPrincipal Usuario usuarioLogado,
-                                   @Valid ImagemForm form) {
+                                  @Valid ImagemForm form) {
 
         Optional<Produto> produtoById = produtoRepository.findById(id);
 
@@ -59,5 +65,22 @@ public class ProdutoController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Deve ser alterado pelo criador do produto.");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto ainda não registrado.");
+    }
+
+    @PostMapping("/{id}/opiniao")
+    @Transactional
+    public OpiniaoDto adicionarOpiniao(@PathVariable("id") Long idProduto,
+                                       @AuthenticationPrincipal Usuario usuarioLogado,
+                                       @RequestBody @Valid OpiniaoForm form) {
+
+        Produto produto = produtoRepository
+                .findById(idProduto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto não foi encontrado"));
+
+        Opiniao opiniao = form.toModel(produto, usuarioLogado);
+        opiniaoRepository.save(opiniao);
+
+
+        return new OpiniaoDto(opiniao);
     }
 }
