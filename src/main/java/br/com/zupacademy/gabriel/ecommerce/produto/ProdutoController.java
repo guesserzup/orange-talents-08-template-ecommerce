@@ -9,6 +9,7 @@ import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.Opiniao;
 import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoDto;
 import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoForm;
 import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoRepository;
+import br.com.zupacademy.gabriel.ecommerce.produto.pergunta.*;
 import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,9 @@ public class ProdutoController {
 
     @Autowired
     OpiniaoRepository opiniaoRepository;
+
+    @Autowired
+    PerguntaRepository perguntaRepository;
 
     @Autowired
     UploaderMockInterface uploaderMockInterface;
@@ -67,20 +71,36 @@ public class ProdutoController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto ainda não registrado.");
     }
 
-    @PostMapping("/{id}/opiniao")
+    @PostMapping("/{idProduto}/opinioes")
     @Transactional
     public OpiniaoDto adicionarOpiniao(@PathVariable("id") Long idProduto,
                                        @AuthenticationPrincipal Usuario usuarioLogado,
                                        @RequestBody @Valid OpiniaoForm form) {
 
-        Produto produto = produtoRepository
-                .findById(idProduto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto não foi encontrado"));
+        Produto produto =
+                produtoRepository.findById(idProduto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto não foi encontrado"));
 
         Opiniao opiniao = form.toModel(produto, usuarioLogado);
         opiniaoRepository.save(opiniao);
 
 
         return new OpiniaoDto(opiniao);
+    }
+
+    @PostMapping("/{idProduto}/perguntas")
+    @Transactional
+    public PerguntaDto adicionarPergunta(@PathVariable("id") Long idProduto, @AuthenticationPrincipal Usuario usuario
+            , @Valid @RequestBody PerguntaForm form) {
+
+        Produto produto = produtoRepository
+                .findById(idProduto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto selecionado não existe"));
+
+        Pergunta pergunta = form.toModel(produto, usuario);
+
+        perguntaRepository.save(pergunta);
+        MailerMock.send(pergunta);
+
+        return new PerguntaDto(pergunta);
     }
 }

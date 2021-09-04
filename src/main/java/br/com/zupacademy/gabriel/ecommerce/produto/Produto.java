@@ -114,4 +114,8 @@ public class Produto {
     public List<CaracteristicasProduto> getCaracteristicas() {
         return caracteristicas;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
 }
