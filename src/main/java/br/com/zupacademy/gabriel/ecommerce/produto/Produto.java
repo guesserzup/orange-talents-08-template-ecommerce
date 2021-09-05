@@ -3,6 +3,11 @@ package br.com.zupacademy.gabriel.ecommerce.produto;
 import br.com.zupacademy.gabriel.ecommerce.categoria.Categoria;
 import br.com.zupacademy.gabriel.ecommerce.produto.caracteristica.CaracteristicasProduto;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.Imagem;
+import br.com.zupacademy.gabriel.ecommerce.produto.imagem.ImagemRepository;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.Opiniao;
+import br.com.zupacademy.gabriel.ecommerce.produto.opiniao.OpiniaoRepository;
+import br.com.zupacademy.gabriel.ecommerce.produto.pergunta.Pergunta;
+import br.com.zupacademy.gabriel.ecommerce.produto.pergunta.PerguntaRepository;
 import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 
@@ -115,7 +120,18 @@ public class Produto {
         return caracteristicas;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getUsuario() { return usuario; }
+
+    public List<String> getLinkImagens(ImagemRepository imagemProdutoRepository) {
+        List<Imagem> imagens = imagemProdutoRepository.findByProdutoId(this.id);
+        return imagens.stream().map(Imagem::getLinkImagem).collect(Collectors.toList());
+    }
+
+    public List<Opiniao> getOpnioes(OpiniaoRepository opiniaoRepository) {
+        return opiniaoRepository.findByProdutoId(this.id);
+    }
+
+    public List<Pergunta> getPerguntas(PerguntaRepository perguntaRepository) {
+        return perguntaRepository.findByProdutoId(this.id);
     }
 }

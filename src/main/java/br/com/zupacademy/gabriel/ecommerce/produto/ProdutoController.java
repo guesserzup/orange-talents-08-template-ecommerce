@@ -1,6 +1,7 @@
 package br.com.zupacademy.gabriel.ecommerce.produto;
 
 import br.com.zupacademy.gabriel.ecommerce.categoria.CategoriaRepository;
+import br.com.zupacademy.gabriel.ecommerce.produto.detalhe.DetalhesDto;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.ImagemForm;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.Imagem;
 import br.com.zupacademy.gabriel.ecommerce.produto.imagem.ImagemRepository;
@@ -92,9 +93,8 @@ public class ProdutoController {
     public PerguntaDto adicionarPergunta(@PathVariable("id") Long idProduto, @AuthenticationPrincipal Usuario usuario
             , @Valid @RequestBody PerguntaForm form) {
 
-        Produto produto = produtoRepository
-                .findById(idProduto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto selecionado não existe"));
+        Produto produto =
+                produtoRepository.findById(idProduto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto selecionado não existe"));
 
         Pergunta pergunta = form.toModel(produto, usuario);
 
@@ -102,5 +102,15 @@ public class ProdutoController {
         MailerMock.send(pergunta);
 
         return new PerguntaDto(pergunta);
+    }
+
+    @GetMapping("/{id}")
+    public DetalhesDto consultaDetalhes(@PathVariable("id") Long id) {
+
+        Produto produto = produtoRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return new DetalhesDto(produto, imagemRepository, opiniaoRepository, perguntaRepository);
     }
 }
