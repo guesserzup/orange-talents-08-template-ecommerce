@@ -27,7 +27,7 @@ public class MailerMock {
     }
 
     public void pagamentoSucesso(Compra compra) {
-        String remetente = "mercadolivre@mercadolivre.com";
+        String remetente = "sac@mercadolivre.com";
         String destinatario = compra.getUsuarioComprador().getLogin();
         String conteudo = "Pagamento realizado com sucesso da sua compra " + compra.toString();
 
@@ -35,7 +35,7 @@ public class MailerMock {
     }
 
     public void pagamentoFalhou(Compra compra) {
-        String remetente = "mercadolivre@mercadolivre.com";
+        String remetente = "sac@mercadolivre.com";
         String destinatario = compra.getUsuarioComprador().getLogin();
         String conteudo = "Seu Pagamento falhou tente novamente em: " + compra.getRetornoGatewayPagamento();
 
