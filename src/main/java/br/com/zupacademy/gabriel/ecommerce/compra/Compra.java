@@ -1,5 +1,6 @@
 package br.com.zupacademy.gabriel.ecommerce.compra;
 
+import br.com.zupacademy.gabriel.ecommerce.checkout.Transacao;
 import br.com.zupacademy.gabriel.ecommerce.produto.Produto;
 import br.com.zupacademy.gabriel.ecommerce.usuario.Usuario;
 
@@ -80,4 +81,8 @@ public class Compra {
         return this.gatewayPagamento.urlRetorno(this.id);
     }
 
+    @Override
+    public String toString() {
+        return "Compra{" + "id=" + id + ", status=" + status + ", gatewayPagamento=" + gatewayPagamento + ", produto" + "=" + produto + ", quantidade=" + quantidade + ", usuarioComprador=" + usuarioComprador + ", " + "valorProduto=" + valorProduto + '}';
+    }
 }

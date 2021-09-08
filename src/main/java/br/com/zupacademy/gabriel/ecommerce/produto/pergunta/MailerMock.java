@@ -20,8 +20,24 @@ public class MailerMock {
 
         String destinatario = compra.getProduto().getUsuario().getLogin();
 
-        String conteudo = "Uma nova compra foi realizada para o seu produto: " + compra.getProduto().getNome() + " na" +
-                " " + "quantidade de: " + compra.getQuantidade().toString() + " pelo comprador: " + compra.getUsuarioComprador().getLogin();
+        String conteudo = "Uma nova compra foi realizada para o seu produto: " + compra.getProduto().getNome() + " " +
+                "na" + " " + "quantidade de: " + compra.getQuantidade().toString() + " pelo comprador: " + compra.getUsuarioComprador().getLogin();
+
+        System.out.println("Remetente: " + remetente + "\n" + "Destinatario: " + destinatario + "\n" + "Conteúdo: \n" + conteudo);
+    }
+
+    public void pagamentoSucesso(Compra compra) {
+        String remetente = "mercadolivre@mercadolivre.com";
+        String destinatario = compra.getUsuarioComprador().getLogin();
+        String conteudo = "Pagamento realizado com sucesso da sua compra " + compra.toString();
+
+        System.out.println("Remetente: " + remetente + "\n" + "Destinatario: " + destinatario + "\n" + "Conteúdo: \n" + conteudo);
+    }
+
+    public void pagamentoFalhou(Compra compra) {
+        String remetente = "mercadolivre@mercadolivre.com";
+        String destinatario = compra.getUsuarioComprador().getLogin();
+        String conteudo = "Seu Pagamento falhou tente novamente em: " + compra.getRetornoGatewayPagamento();
 
         System.out.println("Remetente: " + remetente + "\n" + "Destinatario: " + destinatario + "\n" + "Conteúdo: \n" + conteudo);
     }
